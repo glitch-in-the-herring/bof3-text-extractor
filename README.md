@@ -1,2 +1,2 @@
 # bof3-area-file-reader
-A python script that can process AREAxxx.EMI files found in the Breath of Fire III game files
+A python script that can process dialogues and lines in the AREAxxx.EMI files found in the game files of Breath of Fire III 

@@ -27,8 +27,8 @@ int main (int argc, char *argv[])
     node *temp = calloc(1, sizeof(node));
     if (temp == NULL)
     {
-        printf("Failed to allocate memory!");
-        return 5;
+        printf("Failed to allocate memory");
+        return 4;
     }
     chunk_chain = temp;
 
@@ -66,8 +66,8 @@ int main (int argc, char *argv[])
                 temp->next = calloc(1, sizeof(node));
                 if (temp->next == NULL)
                 {
-                    printf("Failed to allocate memory!");
-                    return 5;
+                    printf("Failed to allocate memory");
+                    return 4;
                 }
                 copy_arrays(temp->chunk, chunk, 512);
                 temp = temp->next;

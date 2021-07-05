@@ -1,2 +1,2 @@
-extractor: extractor.c utils.c
-	gcc -o extractor extractor.c utils.c
+extractor: src_c/extractor.c src_c/utils.c
+	gcc -o extractor src_c/extractor.c src_c/utils.c

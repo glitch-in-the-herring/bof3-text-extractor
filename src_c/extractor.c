@@ -2,7 +2,7 @@
 
 int main (int argc, char *argv[])
 {
-    if (argc < 3)
+    if (argc != 3)
     {
         printf("Usage: ./extractor input_file output_file\n");
         return 1;
@@ -44,7 +44,7 @@ int main (int argc, char *argv[])
             printf("Not a valid .EMI file!");
             fclose(area_file);
             fclose(output_file);
-            return 4;
+            return 5;
         }
         else
         {

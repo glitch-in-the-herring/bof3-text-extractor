@@ -26,8 +26,6 @@ def main() -> int:
 
     if args.output:
         output_file = open(args.output, 'w', encoding='utf-8')
-        output_address = 0
-        output_file.seek(0)
 
     area_file.seek(8)
     if area_file.read(8) != b'MATH_TBL':
@@ -49,8 +47,7 @@ def main() -> int:
                 prepad_chunks_found[1] = True
         else:
             dialogue_chunk += chunk
-            if re.search(b'_{2,}$', chunk):
-                final_chunk = True
+            final_chunk = re.search(b'_{2,}$', chunk)
 
         i += 1
         area_file.seek(512 * i)
@@ -70,7 +67,7 @@ def main() -> int:
             output += window_position[byte]
 
     if args.output:
-        output_file.write(str(output))
+        output_file.write(output)
     else:
         print(output)  
     

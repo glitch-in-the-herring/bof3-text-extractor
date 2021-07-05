@@ -86,10 +86,92 @@ int main (int argc, char *argv[])
         }
         i++;
     }
+    free_node(chunk_chain);
+
+    char punct;
+    for (int i = 0; i < 512 * chunk_count - 1; i++)
+    {
+        if (dialogue_section[i] == 0x0c)
+        {
+            switch (dialogue_section[i + 1])
+            {
+                case 0x03:
+                    fprintf(output_file, "[BOX_TOPL] ");
+                    break;
+                case 0x04:
+                    fprintf(output_file, "[BOX_TOPR] ");
+                    break;
+                case 0x05:
+                    fprintf(output_file, "[BOX_BOTTOML] ");
+                    break;
+                case 0x06:
+                    fprintf(output_file, "[BOX_BOTTOMR] ");
+                    break;
+            }
+        }
+        else if (dialogue_section[i] == 0x0d || dialogue_section[i] == 0xff)
+        {
+            fprintf(output_file, " ");
+        }
+        else if ((dialogue_section[i - 1] != 0x04 && dialogue_section[i - 1] != 0x0f) && dialogue_section[i] == 0x01)
+        {
+            fprintf(output_file, "\n");
+        }
+        else if (dialogue_section[i] == 0x0b)
+        {
+            fprintf(output_file, "--");
+        }
+        else if ((dialogue_section[i] == 0x00 && (dialogue_section[i - 1] != 0x04 && dialogue_section[i - 1] != 0x0f)) || dialogue_section[i] == 0x20)
+        {
+            fprintf(output_file, "\n\n--------------------\n");
+        }
+        else if (dialogue_section[i] == 0x02 && (dialogue_section[i - 1] != 0x04 && dialogue_section[i - 1] != 0x0f))
+        {
+            fprintf(output_file, "\nV\n");
+        }
+        else if (dialogue_section[i] == 0x0f && (dialogue_section[i + 1] <= 0x09 && dialogue_section[i + 1] >= 0x01))
+        {
+            fprintf(output_file, " ");
+        }
+        else if (dialogue_section[i] == 0x04 && dialogue_section[i - 1] != 0x0f)
+        {
+            switch (dialogue_section[i + 1])
+            {
+                case 0x00:
+                    fprintf(output_file, "Ryu");
+                    break;
+                case 0x01:
+                    fprintf(output_file, "Nina");
+                    break;
+                case 0x02:
+                    fprintf(output_file, "Garr");
+                    break;
+                case 0x03:
+                    fprintf(output_file, "Teepo");
+                    break;
+                case 0x04:
+                    fprintf(output_file, "Rei");
+                    break;
+                case 0x05:
+                    fprintf(output_file, "Momo");
+                    break;
+                case 0x06:
+                    fprintf(output_file, "Peco");
+                    break;
+            }
+        }
+        else if ((punct = is_punct(dialogue_section[i])) != 0x00)
+        {
+            fprintf(output_file, "%c", punct);
+        }
+        else if (is_alpha(dialogue_section[i]))
+        {
+            fprintf(output_file, "%c", dialogue_section[i]);
+        }
+    }
 
     fclose(area_file);
     fclose(output_file);
-    free_node(chunk_chain);
 }
 
 void free_node(node *n)
@@ -158,4 +240,40 @@ bool is_second_prepadding(byte chunk[])
 bool is_final_chunk(byte chunk[])
 {
     return chunk[511] == 0x5f && chunk[510] == 0x5f;
+}
+
+bool is_alpha(byte a)
+{
+    return (a >= 65 && a <= 90) || (a >= 97 && a <= 122);
+}
+
+char is_punct(byte a)
+{
+    switch (a)
+    {
+        case 0x5d:
+            return '!';
+            break;
+        case 0x90:
+            return '"';
+            break;
+        case 0x8e:
+            return '\'';
+            break;
+        case 0x3c:
+            return ',';
+            break;
+        case 0x3d:
+            return '-';
+            break;
+        case 0x3e:
+            return '.';
+            break;
+        case 0x5c:
+            return '?';
+            break;
+        default:
+            return 0x00;
+            break;
+    }
 }

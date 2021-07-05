@@ -17,3 +17,5 @@ bool is_math_tbl(byte chunk[]);
 bool is_first_prepadding(byte chunk[]);
 bool is_second_prepadding(byte chunk[]);
 bool is_final_chunk(byte chunk[]);
+bool is_alpha(byte a);
+char is_punct(byte a);

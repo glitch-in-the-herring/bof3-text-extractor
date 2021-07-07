@@ -1,6 +1,6 @@
 #include "extractor.h"
 
-int main (int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     if (argc != 3)
     {
@@ -172,4 +172,5 @@ int main (int argc, char *argv[])
 
     fclose(area_file);
     fclose(output_file);
+    return 0;
 }

@@ -50,6 +50,8 @@ int main(int argc, char *argv[])
 
     while (fread(chunk, 1, sizeof(chunk), area_file) > 0 && !final_chunk)
     {
+        // Checks the 8th-15th byte of the first chunk
+        // for the "magic number" of an EMI file.
         if (first_chunk && !is_math_tbl(chunk))
         {
             printf("Not a valid .EMI file!");
@@ -62,10 +64,17 @@ int main(int argc, char *argv[])
             first_chunk = false;
             if (!(paddings_found[0] && paddings_found[1]))
             {
+                // if the current chunk matches the first prepadding
+                // and the second chunk hasn't been discovered yet
+                // then this chunk is indeed the first prepadding
+                // (order matters here since there may be other
+                // chunks consisting of 512x 0x5F)
                 if (!paddings_found[1] && is_first_prepadding(chunk))
                 {
                     paddings_found[0] = true;
                 }
+                // similar with the above case but now
+                // checks if the first prepadding has been found.         
                 else if (paddings_found[0] && is_second_prepadding(chunk))
                 {
                     paddings_found[1] = true;
@@ -136,6 +145,9 @@ int main(int argc, char *argv[])
         {
             fprintf(output_file, " ");
         }
+        // 0x00 - 0x06 are bytes that need special attention, since
+        // those bytes are used in two-byte sequences to encode
+        // screen position, character name and text effects
         else if ((dialogue_section[i - 1] != 0x04 && dialogue_section[i - 1] != 0x0f) && dialogue_section[i] == 0x01)
         {
             fprintf(output_file, "\n");

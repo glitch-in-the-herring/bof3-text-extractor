@@ -63,11 +63,19 @@ bool is_second_prepadding(byte chunk[])
     return a == 512;
 }
 
+// The dialogue section always lines up with the
+// chunks, that is to say, a dialogue section fits
+// within an integer number of chunks.
+// To accomplish this it must add paddings, which
+// consists of repeating 0x5F. This can be used to
+// check the end of the section.
 bool is_final_chunk(byte chunk[])
 {
     return chunk[511] == 0x5f && chunk[510] == 0x5f;
 }
 
+// The builtin function in ctype.h should in theory
+// work just fine.
 bool is_alpha(byte a)
 {
     return (a >= 65 && a <= 90) || (a >= 97 && a <= 122);

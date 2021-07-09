@@ -2,15 +2,20 @@
 
 int main(int argc, char *argv[])
 {
+    // Check if proper arguments are passed.
+    // Unlike in the python version, the C
+    // version will not print to the terminal.
     if (argc != 3)
     {
         printf("Usage: ./extractor input_file output_file\n");
         return 1;
     }
 
+    // Open input and output files. Additionaly
+    // checks for errors while opening those 
+    // files.
     FILE *area_file = fopen(argv[1], "rb");
     FILE *output_file = fopen(argv[2], "w");
-
     if (area_file == NULL)
     {
         printf("Error opening input file");
@@ -22,6 +27,11 @@ int main(int argc, char *argv[])
         return 3;
     }
 
+    // An .EMI file consists of "chunks". These
+    // chunks are 512 bytes each in size.
+    // The linked list is used to store all the
+    // chunks in the file, which will later be
+    // concatenated.
     byte chunk[512];
     node *chunk_chain;
     node *temp = calloc(1, sizeof(node));
@@ -32,6 +42,7 @@ int main(int argc, char *argv[])
     }
     chunk_chain = temp;
 
+    // Ideally the .EMI file shouldn't be read until EOF 
     int chunk_count = 0;
     bool final_chunk = false;
     bool first_chunk = true;
@@ -76,6 +87,15 @@ int main(int argc, char *argv[])
         }
     }
 
+    // In case none of the chunks actually contain
+    // the dialogue section.
+    if (!(paddings_found[0] && paddings_found[1]))
+    {
+        printf("No dialogue section found in this .EMI file!");
+        return 6;
+    }
+
+    // Concatenates every chunk in the chunk_chain list
     byte dialogue_section[512 * chunk_count];
     int i = 0;
     for (node *n = chunk_chain; n->next != NULL; n = n->next)
@@ -88,6 +108,9 @@ int main(int argc, char *argv[])
     }
     free_node(chunk_chain);
 
+    // Converts the weird encoding Breath of Fire III
+    // uses for the non-alphabetical characters
+    // as well as the control characters.
     char punct;
     for (int i = 0; i < 512 * chunk_count - 1; i++)
     {

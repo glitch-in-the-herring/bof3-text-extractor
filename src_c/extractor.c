@@ -18,12 +18,12 @@ int main(int argc, char *argv[])
     FILE *output_file = fopen(argv[2], "w");
     if (area_file == NULL)
     {
-        printf("Error opening input file");
+        printf("Error opening input file\n");
         return 2;
     }
     else if (output_file == NULL)
     {
-        printf("Error opening output file");
+        printf("Error opening output file\n");
         return 3;
     }
 
@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
     node *temp = calloc(1, sizeof(node));
     if (temp == NULL)
     {
-        printf("Failed to allocate memory");
+        printf("Failed to allocate memory\n");
         return 4;
     }
     chunk_chain = temp;
@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
         // for the "magic number" of an EMI file.
         if (first_chunk && !is_math_tbl(chunk))
         {
-            printf("Not a valid .EMI file!");
+            printf("Not a valid .EMI file!\n");
             fclose(area_file);
             fclose(output_file);
             return 5;
@@ -82,15 +82,20 @@ int main(int argc, char *argv[])
             }
             else
             {
+                // Needed to determine the size of the dialogue
+                // section.
                 chunk_count++;
                 temp->next = calloc(1, sizeof(node));
                 if (temp->next == NULL)
                 {
-                    printf("Failed to allocate memory");
+                    printf("Failed to allocate memory\n");
                     return 4;
                 }
+                // Copy the current chunk to the current node's
+                // chunk.
                 copy_arrays(temp->chunk, chunk, 512);
                 temp = temp->next;
+                // Check if this is the final chunk.
                 final_chunk = is_final_chunk(chunk);
             }
         }
@@ -100,7 +105,7 @@ int main(int argc, char *argv[])
     // the dialogue section.
     if (!(paddings_found[0] && paddings_found[1]))
     {
-        printf("No dialogue section found in this .EMI file!");
+        printf("No dialogue section found in this .EMI file!\n");
         return 6;
     }
 

@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include <string.h>
 
 typedef uint8_t byte;
 typedef struct node

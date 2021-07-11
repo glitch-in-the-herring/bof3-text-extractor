@@ -184,3 +184,5 @@ dkms.conf
 # Test files
 *.EMI
 *.txt
+
+src_cpp/

@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
     // chunks in the file, which will later be
     // concatenated.
     byte chunk[512];
-    node *chunk_chain;
+    node *chunk_chain = NULL;
     node *temp = calloc(1, sizeof(node));
     if (temp == NULL)
     {

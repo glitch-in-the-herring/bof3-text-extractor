@@ -18,11 +18,13 @@ int main(int argc, char *argv[])
     FILE *output_file = fopen(argv[2], "w");
     if (area_file == NULL)
     {
+        remove(argv[2]);
         printf("Error opening input file\n");
         return 2;
     }
     else if (output_file == NULL)
     {
+        remove(argv[2]);
         printf("Error opening output file\n");
         return 3;
     }
@@ -37,6 +39,7 @@ int main(int argc, char *argv[])
     node *temp = calloc(1, sizeof(node));
     if (temp == NULL)
     {
+        remove(argv[2]);
         printf("Failed to allocate memory\n");
         return 4;
     }
@@ -54,6 +57,7 @@ int main(int argc, char *argv[])
         // for the "magic number" of an EMI file.
         if (first_chunk && !is_math_tbl(chunk))
         {
+            remove(argv[2]);
             printf("Not a valid .EMI file!\n");
             fclose(area_file);
             fclose(output_file);
@@ -61,6 +65,7 @@ int main(int argc, char *argv[])
         }
         else
         {
+            printf("somehow this returns true");
             first_chunk = false;
             if (!(paddings_found[0] && paddings_found[1]))
             {
@@ -105,6 +110,7 @@ int main(int argc, char *argv[])
     // the dialogue section.
     if (!(paddings_found[0] && paddings_found[1]))
     {
+        remove(argv[2]);
         printf("No dialogue section found in this .EMI file!\n");
         return 6;
     }

@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
     bool first_chunk = true;
     bool paddings_found[2] = {false, false};
 
-    fread(chunk, 1, sizeof(chunk), area_file)
+    fread(chunk, 1, sizeof(chunk), area_file);
     if (!is_math_tbl(chunk))
     {
         printf("Not a valid .EMI file!\n");

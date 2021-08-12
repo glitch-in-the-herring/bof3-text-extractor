@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
     // version will not print to the terminal.
     if (argc != 3)
     {
-        printf("Usage: ./%s input_file output_file\n", argv[0]);
+        printf("Usage: %s input_file output_file\n", argv[0]);
         return 1;
     }
 
@@ -19,11 +19,13 @@ int main(int argc, char *argv[])
     if (area_file == NULL)
     {
         printf("Error opening input file\n");
+        remove(argv[2]);
         return 2;
     }
     else if (output_file == NULL)
     {
         printf("Error opening output file\n");
+        remove(argv[2]);
         return 3;
     }
 
@@ -38,6 +40,7 @@ int main(int argc, char *argv[])
     if (temp == NULL)
     {
         printf("Failed to allocate memory\n");
+        remove(argv[2]);
         return 4;
     }
     chunk_chain = temp;
@@ -48,56 +51,54 @@ int main(int argc, char *argv[])
     bool first_chunk = true;
     bool paddings_found[2] = {false, false};
 
+    fread(chunk, 1, sizeof(chunk), area_file);
+    if (!is_math_tbl(chunk))
+    {
+        printf("Not a valid .EMI file!\n");
+        fclose(area_file);
+        fclose(output_file);
+        remove(argv[2]);
+        return 5;
+    }
+
     while (fread(chunk, 1, sizeof(chunk), area_file) > 0 && !final_chunk)
     {
-        // Checks the 8th-15th byte of the first chunk
-        // for the "magic number" of an EMI file.
-        if (first_chunk && !is_math_tbl(chunk))
+        printf("should not print");
+        if (!(paddings_found[0] && paddings_found[1]))
         {
-            printf("Not a valid .EMI file!\n");
-            fclose(area_file);
-            fclose(output_file);
-            return 5;
+            // if the current chunk matches the first prepadding
+            // and the second chunk hasn't been discovered yet
+            // then this chunk is indeed the first prepadding
+            // (order matters here since there may be other
+            // chunks consisting of 512x 0x5F)
+            if (!paddings_found[1] && is_first_prepadding(chunk))
+            {
+                paddings_found[0] = true;
+            }
+            // similar with the above case but now
+            // checks if the first prepadding has been found.         
+            else if (paddings_found[0] && is_second_prepadding(chunk))
+            {
+                paddings_found[1] = true;
+            }
         }
         else
         {
-            first_chunk = false;
-            if (!(paddings_found[0] && paddings_found[1]))
+            // Needed to determine the size of the dialogue
+            // section.
+            chunk_count++;
+            temp->next = calloc(1, sizeof(node));
+            if (temp->next == NULL)
             {
-                // if the current chunk matches the first prepadding
-                // and the second chunk hasn't been discovered yet
-                // then this chunk is indeed the first prepadding
-                // (order matters here since there may be other
-                // chunks consisting of 512x 0x5F)
-                if (!paddings_found[1] && is_first_prepadding(chunk))
-                {
-                    paddings_found[0] = true;
-                }
-                // similar with the above case but now
-                // checks if the first prepadding has been found.         
-                else if (paddings_found[0] && is_second_prepadding(chunk))
-                {
-                    paddings_found[1] = true;
-                }
+                printf("Failed to allocate memory\n");
+                return 4;
             }
-            else
-            {
-                // Needed to determine the size of the dialogue
-                // section.
-                chunk_count++;
-                temp->next = calloc(1, sizeof(node));
-                if (temp->next == NULL)
-                {
-                    printf("Failed to allocate memory\n");
-                    return 4;
-                }
-                // Copy the current chunk to the current node's
-                // chunk.
-                copy_arrays(temp->chunk, chunk, 512);
-                temp = temp->next;
-                // Check if this is the final chunk.
-                final_chunk = is_final_chunk(chunk);
-            }
+            // Copy the current chunk to the current node's
+            // chunk.
+            copy_arrays(temp->chunk, chunk, 512);
+            temp = temp->next;
+            // Check if this is the final chunk.
+            final_chunk = is_final_chunk(chunk);
         }
     }
 
@@ -105,6 +106,7 @@ int main(int argc, char *argv[])
     // the dialogue section.
     if (!(paddings_found[0] && paddings_found[1]))
     {
+        remove(argv[2]);
         printf("No dialogue section found in this .EMI file!\n");
         return 6;
     }

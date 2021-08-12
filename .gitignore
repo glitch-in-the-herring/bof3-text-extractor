@@ -186,3 +186,4 @@ dkms.conf
 *.txt
 
 src_cpp/
+src_java/

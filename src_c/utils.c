@@ -81,6 +81,8 @@ bool is_alpha(byte a)
     return (a >= 65 && a <= 90) || (a >= 97 && a <= 122);
 }
 
+// Converts codepoints used for encoding punctuations
+// into actual punctuations.
 char is_punct(byte a)
 {
     switch (a)

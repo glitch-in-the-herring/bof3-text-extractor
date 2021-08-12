@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
     // version will not print to the terminal.
     if (argc != 3)
     {
-        printf("Usage: ./%s input_file output_file\n", argv[0]);
+        printf("Usage: %s input_file output_file\n", argv[0]);
         return 1;
     }
 

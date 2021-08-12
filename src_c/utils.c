@@ -29,6 +29,7 @@ bool is_math_tbl(byte chunk[])
             return false;
         }
     }
+    printf("somehow this returns true");
     return true;
 }
 

@@ -51,6 +51,8 @@ int main(int argc, char *argv[])
     bool first_chunk = true;
     bool paddings_found[2] = {false, false};
 
+    // Checks the 8th-15th byte of the first chunk
+    // for the "magic number" of an EMI file.
     fread(chunk, 1, sizeof(chunk), area_file);
     if (!is_math_tbl(chunk))
     {

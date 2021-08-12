@@ -50,9 +50,10 @@ int main(int argc, char *argv[])
     bool final_chunk = false;
     bool first_chunk = true;
     bool paddings_found[2] = {false, false};
-
+    printf("somehow this returns true");
     while (fread(chunk, 1, sizeof(chunk), area_file) > 0 && !final_chunk)
     {
+        printf("somehow this also returns true");
         // Checks the 8th-15th byte of the first chunk
         // for the "magic number" of an EMI file.
         if (first_chunk && !is_math_tbl(chunk))
@@ -65,7 +66,6 @@ int main(int argc, char *argv[])
         }
         else
         {
-            printf("somehow this returns true");
             first_chunk = false;
             if (!(paddings_found[0] && paddings_found[1]))
             {

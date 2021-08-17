@@ -187,3 +187,4 @@ dkms.conf
 
 src_cpp/
 src_java/
+.vs/

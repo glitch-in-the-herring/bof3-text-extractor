@@ -1,6 +1,7 @@
-from sys import argv
-from argparse import ArgumentParser
 import re
+from argparse import ArgumentParser
+from os import remove
+from sys import argv, exit
 
 parser = ArgumentParser()
 parser.add_argument("file", help="Path to the .EMI file", metavar="file")
@@ -17,12 +18,12 @@ controls = [
             ]
 alpha = list(range(65, 91)) + list(range(97, 123))
 
-def main() -> int:
+def main():
     try:
         area_file = open(args.file, 'rb')
     except FileNotFoundError:
         print("File not found!")
-        return 2
+        exit(2)
 
     if args.output:
         output_file = open(args.output, 'w', encoding='utf-8')
@@ -30,7 +31,8 @@ def main() -> int:
     area_file.seek(8)
     if area_file.read(8) != b'MATH_TBL':
         print("Not a valid .EMI file!")
-        return 3
+        remove(args.output)
+        exit(3)
 
     area_file.seek(0)
     chunk = area_file.read(512)

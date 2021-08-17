@@ -1,4 +1,5 @@
 from argparse import ArgumentParser
+from sys import exit
 
 parser = ArgumentParser()
 parser.add_argument("input", help="Path to the .EMI file", metavar="input")
@@ -8,18 +9,18 @@ args = parser.parse_args()
 
 printables = {' ' : b'\xff', '!' : b'\x5d', '"' : b'\x90', "'" : b'\x8e', ',' : b'\x3c', '-' : b'\x3d', '.' : b'\x3e', '?' : b'\x5c'}
 
-def main() -> int:
+def main():
 	try:
 		input_file = open(args.input, 'r')
 	except FileNotFoundError:
 		print("Could not open input file!")
-		return 1
+		exit(1)
 
 	try:
 		output_file = open(args.output, 'wb')
 	except FileNotFoundError:
 		print("Could not open output file!")
-		return 2
+		exit(2)
 
 	input_line = input_file.readline()
 	while input_line != '':

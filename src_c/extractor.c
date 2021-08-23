@@ -108,8 +108,8 @@ int main(int argc, char *argv[])
     // the dialogue section.
     if (!(paddings_found[0] && paddings_found[1]))
     {
-        remove(argv[2]);
         printf("No dialogue section found in this .EMI file!\n");
+        remove(argv[2]);
         return 6;
     }
 

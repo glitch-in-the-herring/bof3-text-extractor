@@ -19,13 +19,14 @@ int main(int argc, char *argv[])
     if (area_file == NULL)
     {
         printf("Error opening input file\n");
+        fclose(output_file);
         remove(argv[2]);
         return 2;
     }
     else if (output_file == NULL)
     {
         printf("Error opening output file\n");
-        remove(argv[2]);
+        fclose(area_file);
         return 3;
     }
 
@@ -40,6 +41,8 @@ int main(int argc, char *argv[])
     if (temp == NULL)
     {
         printf("Failed to allocate memory\n");
+        fclose(area_file);
+        fclose(output_file);
         remove(argv[2]);
         return 4;
     }
@@ -59,13 +62,13 @@ int main(int argc, char *argv[])
         printf("Not a valid .EMI file!\n");
         fclose(area_file);
         fclose(output_file);
+        free_node(chunk_chain);
         remove(argv[2]);
         return 5;
     }
 
     while (fread(chunk, 1, sizeof(chunk), area_file) > 0 && !final_chunk)
     {
-        printf("should not print");
         if (!(paddings_found[0] && paddings_found[1]))
         {
             // if the current chunk matches the first prepadding
@@ -93,6 +96,10 @@ int main(int argc, char *argv[])
             if (temp->next == NULL)
             {
                 printf("Failed to allocate memory\n");
+                fclose(area_file);
+                fclose(output_file);
+                free_node(chunk_chain);
+                remove(argv[2]);
                 return 4;
             }
             // Copy the current chunk to the current node's
@@ -109,6 +116,9 @@ int main(int argc, char *argv[])
     if (!(paddings_found[0] && paddings_found[1]))
     {
         printf("No dialogue section found in this .EMI file!\n");
+        fclose(area_file);
+        fclose(output_file);
+        free_node(chunk_chain);
         remove(argv[2]);
         return 6;
     }
@@ -171,7 +181,7 @@ int main(int argc, char *argv[])
         }
         else if (dialogue_section[i] == 0x02 && (dialogue_section[i - 1] != 0x04 && dialogue_section[i - 1] != 0x0f))
         {
-            fprintf(output_file, "\nV\n");
+            fprintf(output_file, "\n⬇\n");
         }
         else if (dialogue_section[i] == 0x0f && (dialogue_section[i + 1] <= 0x09 && dialogue_section[i + 1] >= 0x01))
         {

@@ -184,6 +184,9 @@ dkms.conf
 # Test files
 *.EMI
 *.txt
+!hiragana.txt
+!katakana.txt
+!kanji.txt
 
 src_cpp/
 src_java/

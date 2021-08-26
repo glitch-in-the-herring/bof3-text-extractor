@@ -3,7 +3,7 @@ A program that can extract the text and dialogues from an AREAxxx.EMI file found
 For absolutely no reason, this program comes in two implementations: Python and C.
 
 ## Downloads
-Windows and Ubuntu: ![](https://github.com/glitch-in-the-herring/bof3-text-extractor/actions/workflows/c-cpp.yml/badge.svg)  
+Windows and Ubuntu: [![](https://github.com/glitch-in-the-herring/bof3-text-extractor/actions/workflows/c-cpp.yml/badge.svg)](https://github.com/glitch-in-the-herring/bof3-text-extractor/actions)
 
 ## Usage
 ### Python version:

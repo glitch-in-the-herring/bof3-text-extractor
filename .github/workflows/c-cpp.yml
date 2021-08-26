@@ -7,11 +7,33 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: make
-      run: make
+    Ubuntu:
+        runs-on: ubuntu-latest    
+        steps: 
+            - name: "Checkout"
+              uses: actions/checkout@v2
+            - name: "Build"
+              run: make
+            - name: "Package"
+              run: |
+                zip "extractor-ubuntu.zip" extractor jpextractor hiragana.txt katakana.txt kanji.txt
+            - name: "Upload"
+              uses: actions/upload-artifact@v1
+              with:
+                name: "extractor-ubuntu-${{ github.sha }}.zip"
+                path: "extractor-ubuntu.zip"
+    Windows:
+        runs-on: windows-latest    
+        steps: 
+            - name: "Checkout"
+              uses: actions/checkout@v2
+            - name: "Build"
+              run: make
+            - name: "Package"
+              run: |
+                tar -a -c -f extractor-windows.zip jpextractor.exe extractor.exe hiragana.txt katakana.txt kanji.txt
+            - name: "Upload"
+              uses: actions/upload-artifact@v1
+              with:
+                name: "extractor-win-${{ github.sha }}.zip"
+                path: "extractor-win.zip"                

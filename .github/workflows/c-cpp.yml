@@ -14,14 +14,16 @@ jobs:
               uses: actions/checkout@v2
             - name: "Build"
               run: make
-            - name: "Package"
-              run: |
-                zip "extractor-ubuntu.zip" extractor jpextractor hiragana.txt katakana.txt kanji.txt
             - name: "Upload"
               uses: actions/upload-artifact@v1
               with:
                 name: "extractor-ubuntu-${{ github.sha }}.zip"
-                path: "extractor-ubuntu.zip"
+                path: |
+                  extractor 
+                  jpextractor
+                  hiragana.txt
+                  katakana.txt
+                  kanji.txt
     Windows:
         runs-on: windows-latest    
         steps: 
@@ -29,11 +31,13 @@ jobs:
               uses: actions/checkout@v2
             - name: "Build"
               run: make
-            - name: "Package"
-              run: |
-                tar -a -c -f extractor-win.zip jpextractor.exe extractor.exe hiragana.txt katakana.txt kanji.txt
             - name: "Upload"
               uses: actions/upload-artifact@v1
               with:
                 name: "extractor-win-${{ github.sha }}.zip"
-                path: "extractor-win.zip"                
+                path: |
+                  extractor.exe
+                  jpextractor.exe
+                  hiragana.txt
+                  katakana.txt
+                  kanji.txt

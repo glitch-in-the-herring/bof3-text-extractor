@@ -19,11 +19,11 @@ jobs:
               with:
                 name: "extractor-ubuntu-${{ github.sha }}.zip"
                 path: |
-                  extractor 
-                  jpextractor
-                  hiragana.txt
-                  katakana.txt
-                  kanji.txt
+                  ../extractor 
+                  ../jpextractor
+                  ../hiragana.txt
+                  ../katakana.txt
+                  ../kanji.txt
     Windows:
         runs-on: windows-latest    
         steps: 
@@ -32,12 +32,12 @@ jobs:
             - name: "Build"
               run: make
             - name: "Upload"
-              uses: actions/upload-artifact@v1
+              uses: actions/upload-artifact@v2
               with:
                 name: "extractor-win-${{ github.sha }}.zip"
                 path: |
-                  extractor.exe
-                  jpextractor.exe
-                  hiragana.txt
-                  katakana.txt
-                  kanji.txt
+                  ../extractor.exe
+                  ../jpextractor.exe
+                  ../hiragana.txt
+                  ../katakana.txt
+                  ../kanji.txt

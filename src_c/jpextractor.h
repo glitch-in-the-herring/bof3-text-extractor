@@ -28,4 +28,4 @@ bool is_final_chunk(byte chunk[]);
 bool is_hiragana(byte a);
 bool is_katakana(byte a);
 bool is_kanji_start(byte a);
-char is_punct(byte a);
+char *is_punct(byte a);

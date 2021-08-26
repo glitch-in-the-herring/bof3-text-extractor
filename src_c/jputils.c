@@ -104,33 +104,33 @@ bool is_kanji_start(byte a)
     return a == 0x12 || a == 0x13;
 }
 
-char is_punct(byte a)
+char *is_punct(byte a)
 {
     switch (a)
     {
-        case 0x5d:
-            return '!';
+        case 0x2A:
+            return "「";
             break;
-        case 0x90:
-            return '"';
+        case 0x3E:
+            return "‥";
             break;
-        case 0x8e:
-            return '\'';
+        case 0x3F:
+            return "？";
             break;
-        case 0x3c:
-            return ',';
+        case 0x40:
+            return "！";
             break;
-        case 0x3d:
-            return '-';
+        case 0xFC:
+            return "ー";
             break;
-        case 0x3e:
-            return '.';
+        case 0xFD:
+            return "。";
             break;
-        case 0x5c:
-            return '?';
+        case 0xFE:
+            return "、";
             break;
         default:
-            return 0x00;
+            return "";
             break;
     }
 }

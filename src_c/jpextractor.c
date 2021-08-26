@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
     FILE *katakana_source = fopen("katakana.txt", "r");
     FILE *kanji_source = fopen("kanji.txt", "r");
     char hiragana_table[80][4];
-    char katakana_table[80][4];
+    char katakana_table[81][4];
     char kanji_table[441][4];
     load_lookup_table(4, hiragana_table, hiragana_source);
     load_lookup_table(4, katakana_table, katakana_source);
@@ -207,8 +207,16 @@ int main(int argc, char *argv[])
             kanji_1 = dialogue_section[i + 1];
             kanji_bytes = (kanji_0 << 8) | kanji_1;
             fprintf(output_file, "%s", kanji_table[kanji_bytes - KJSTART]);
-        }                                           
-    }        
+        }
+        else if (dialogue_section[i] == 0x15 && dialogue_section[i + 1] == 0x07)
+        {
+            fprintf(output_file, "〜");
+        }
+        else if (strcmp(strcpy(punct, is_punct(dialogue_section[i])), "") != 0)
+        {
+            fprintf(output_file, "%s", punct);
+        }
+    }
 
     fclose(area_file);
     fclose(output_file);

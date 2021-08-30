@@ -9,7 +9,6 @@
 #define KTSTART 0xAB
 #define KTEND 0xFA
 #define KJSTART 0x1200
-#define KJEND 0x13B8
 
 typedef uint8_t byte;
 typedef struct node

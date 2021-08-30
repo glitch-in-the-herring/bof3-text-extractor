@@ -105,8 +105,14 @@ char is_punct(byte a)
         case 0x3e:
             return '.';
             break;
+        case 0x40:
+            return '=';
+            break;
         case 0x5c:
             return '?';
+            break;
+        case 0x8f:
+            return ':';
             break;
         default:
             return 0x00;

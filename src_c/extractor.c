@@ -140,12 +140,22 @@ int main(int argc, char *argv[])
     // uses for the non-alphabetical characters
     // as well as the control characters.
     char punct;
+    char last_effect[16];
     for (int i = 0; i < 512 * chunk_count - 1; i++)
     {
         if (dialogue_section[i] == 0x0c)
         {
             switch (dialogue_section[i + 1])
             {
+                case 0x00:
+                    fprintf(output_file, "[BOX_BOTTOMM] ");
+                    break;                
+                case 0x01:
+                    fprintf(output_file, "[BOX_MIDM] ");
+                    break;                 
+                case 0x02:
+                    fprintf(output_file, "[BOX_TOPM] ");
+                    break;                    
                 case 0x03:
                     fprintf(output_file, "[BOX_TOPL] ");
                     break;
@@ -160,18 +170,22 @@ int main(int argc, char *argv[])
                     break;
             }
         }
-        else if (dialogue_section[i] == 0x0d || dialogue_section[i] == 0xff)
+        else if (dialogue_section[i] == 0xff)
         {
             fprintf(output_file, " ");
         }
-        // 0x00 - 0x06 are bytes that need special attention, since
+        else if (dialogue_section[i] == 0x0d)
+        {
+            fprintf(output_file, "[EFFECT]");
+        }
+        // 0x00 - 0x19 are bytes that need special attention, since
         // those bytes are used in two-byte sequences to encode
-        // screen position, character name and text effects
-        else if ((dialogue_section[i - 1] != 0x04 && dialogue_section[i - 1] != 0x0f) && dialogue_section[i] == 0x01)
+        // dialogue position, character name and text effects
+        else if (dialogue_section[i] == 0x01 && !(dialogue_section[i - 1] == 0x04 || dialogue_section[i - 1] == 0x0f))
         {
             fprintf(output_file, "\n");
         }
-        else if (dialogue_section[i] == 0x0b)
+        else if (dialogue_section[i] == 0x0b && !(dialogue_section[i - 1] == 0x0f))
         {
             fprintf(output_file, "--");
         }
@@ -214,6 +228,40 @@ int main(int argc, char *argv[])
                     break;
             }
         }
+        else if (dialogue_section[i] == 0x05 && dialogue_section[i - 1] != 0x0f)
+        {
+            switch (dialogue_section[i + 1])
+            {
+                case 0x01:
+                    fprintf(output_file, "[PURPLE]");
+                    strcpy(last_effect, "[PURPLE]");
+                    break;
+                case 0x02:
+                    fprintf(output_file, "[RED]");
+                    strcpy(last_effect, "[RED]");                    
+                    break;
+                case 0x03:
+                    fprintf(output_file, "[CYAN]");
+                    strcpy(last_effect, "[CYAN]");                    
+                    break;
+                case 0x04:
+                    fprintf(output_file, "[YELLOW]");
+                    strcpy(last_effect, "[YELLOW]");                    
+                    break;
+                case 0x05:
+                    fprintf(output_file, "[PINK]");
+                    strcpy(last_effect, "[PINK]");                    
+                    break;
+                case 0x06:
+                    fprintf(output_file, "[GREEN]");
+                    strcpy(last_effect, "[GREEN]");                    
+                    break;
+                case 0x07:
+                    fprintf(output_file, "[BLACK]");
+                    strcpy(last_effect, "[BLACk]");                    
+                    break;                    
+            }
+        }        
         else if ((punct = is_punct(dialogue_section[i])) != 0x00)
         {
             fprintf(output_file, "%c", punct);

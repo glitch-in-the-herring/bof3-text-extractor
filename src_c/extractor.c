@@ -239,7 +239,7 @@ int main(int argc, char *argv[])
             strcpy(last_color, is_color(dialogue_section[i + 1]));
             fprintf(output_file, "[%s]", last_color);
         }
-        else if (dialogue_section[i] == 0x06 && !(dialogue_section[i - 1] == 0x04 || dialogue_section[i - 1] == 0x05 || dialogue_section[i] == 0x0c || dialogue_section[i - 1] == 0x0f || dialogue_section[i - 1] == 0x14))
+        else if (dialogue_section[i] == 0x06 && !(dialogue_section[i - 1] == 0x04 || dialogue_section[i - 1] == 0x05 || dialogue_section[i - 1] == 0x0c || dialogue_section[i - 1] == 0x0f || dialogue_section[i - 1] == 0x14))
         {
             fprintf(output_file, "[/%s]", last_color);
         }

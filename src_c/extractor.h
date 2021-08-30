@@ -19,3 +19,5 @@ bool is_second_prepadding(byte chunk[]);
 bool is_final_chunk(byte chunk[]);
 bool is_alpha(byte a);
 char is_punct(byte a);
+char *is_color(byte a);
+char *is_effect(byte a);

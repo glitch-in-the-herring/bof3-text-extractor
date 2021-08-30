@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <string.h>
 
 typedef uint8_t byte;
 typedef struct node
@@ -18,3 +19,5 @@ bool is_second_prepadding(byte chunk[]);
 bool is_final_chunk(byte chunk[]);
 bool is_alpha(byte a);
 char is_punct(byte a);
+char *is_color(byte a);
+char *is_effect(byte a);

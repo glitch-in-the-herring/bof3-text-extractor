@@ -110,7 +110,6 @@ int main(int argc, char *argv[])
 
     char punct;
     char last_color[8];
-    char last_effect[32];
     for (int i = 0; i < 512 * chunk_count - 1; i++)
     {
         if (is_alpha(dialogue_section[i]))
@@ -176,7 +175,7 @@ int main(int argc, char *argv[])
         }
         else if (dialogue_section[i] == 0x02)
         {
-            fprintf(output_file, "\n⬇\n");
+            fprintf(output_file, "\n        ▼        \n");
         }
         else if (dialogue_section[i] == 0x0f && dialogue_section[i - 1] == 0x0e)
         {

@@ -124,21 +124,41 @@ int main(int argc, char *argv[])
     int kanji_bytes;
     for (int i = 0; i < 512 * chunk_count - 1; i++)
     {
-        if (dialogue_section[i] == 0x0c && !is_kanji_start(dialogue_section[i - 1]))
+        if (is_hiragana(dialogue_section[i]))
+        {
+            fprintf(output_file, "%s", hiragana_table[dialogue_section[i] - HRSTART]);
+        }
+        else if (is_katakana(dialogue_section[i]))
+        {
+            fprintf(output_file, "%s", katakana_table[dialogue_section[i] - KTSTART]);
+        }
+        else if (is_kanji_start(dialogue_section[i]))
+        {
+            kanji_0 = dialogue_section[i];
+            kanji_1 = dialogue_section[i + 1];
+            kanji_bytes = (kanji_0 << 8) | kanji_1;
+            fprintf(output_file, "%s", kanji_table[kanji_bytes - KJSTART]);
+            i++;
+        }        
+        else if (dialogue_section[i] == 0x0c)
         {
             switch (dialogue_section[i + 1])
             {
                 case 0x03:
                     fprintf(output_file, "[BOX_TOPL] ");
+                    i++;
                     break;
                 case 0x04:
                     fprintf(output_file, "[BOX_TOPR] ");
+                    i++;                    
                     break;
                 case 0x05:
                     fprintf(output_file, "[BOX_BOTTOML] ");
+                    i++;                    
                     break;
                 case 0x06:
                     fprintf(output_file, "[BOX_BOTTOMR] ");
+                    i++;                    
                     break;
             }            
         }
@@ -192,21 +212,6 @@ int main(int argc, char *argv[])
                     fprintf(output_file, "ペコロス");
                     break;
             }
-        }
-        else if (is_hiragana(dialogue_section[i]) && !is_kanji_start(dialogue_section[i - 1]))
-        {
-            fprintf(output_file, "%s", hiragana_table[dialogue_section[i] - HRSTART]);
-        }
-        else if (is_katakana(dialogue_section[i]) && !is_kanji_start(dialogue_section[i - 1]))
-        {
-            fprintf(output_file, "%s", katakana_table[dialogue_section[i] - KTSTART]);
-        }
-        else if (is_kanji_start(dialogue_section[i]))
-        {
-            kanji_0 = dialogue_section[i];
-            kanji_1 = dialogue_section[i + 1];
-            kanji_bytes = (kanji_0 << 8) | kanji_1;
-            fprintf(output_file, "%s", kanji_table[kanji_bytes - KJSTART]);
         }
         else if (dialogue_section[i] == 0x15 && dialogue_section[i + 1] == 0x07)
         {

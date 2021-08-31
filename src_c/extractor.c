@@ -149,7 +149,6 @@ int main(int argc, char *argv[])
                     i++;                    
                     break;
                 default:
-                    fprintf(output_file, "");
                     break;                    
             }
         }
@@ -215,7 +214,6 @@ int main(int argc, char *argv[])
                     i++;                    
                     break;
                 default:
-                    fprintf(output_file, "");
                     break;
             }
         }

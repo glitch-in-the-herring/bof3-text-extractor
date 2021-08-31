@@ -110,44 +110,36 @@ int main(int argc, char *argv[])
 
     char punct;
     char last_color[8];
-    char last_effect[32];
     for (int i = 0; i < 512 * chunk_count - 1; i++)
     {
         if (is_alpha(dialogue_section[i]))
         {
             fprintf(output_file, "%c", dialogue_section[i]);
         }        
-        else if (dialogue_section[i] == 0x0c)
+        else if (dialogue_section[i] == 0x0c && dialogue_section[i - 1] != 0x0f)
         {
             switch (dialogue_section[i + 1])
             {
                 case 0x00:
                     fprintf(output_file, "[BOX_BOTTOMM] ");
-                    i++;
                     break;                
                 case 0x01:
                     fprintf(output_file, "[BOX_MIDM] ");
-                    i++;                    
                     break;                 
                 case 0x02:
                     fprintf(output_file, "[BOX_TOPM] ");
-                    i++;                    
                     break;                    
                 case 0x03:
                     fprintf(output_file, "[BOX_TOPL] ");
-                    i++;                    
                     break;
                 case 0x04:
                     fprintf(output_file, "[BOX_TOPR] ");
-                    i++;                    
                     break;
                 case 0x05:
                     fprintf(output_file, "[BOX_BOTTOML] ");
-                    i++;                    
                     break;
                 case 0x06:
                     fprintf(output_file, "[BOX_BOTTOMR] ");
-                    i++;                    
                     break;
                 default:
                     fprintf(output_file, "");
@@ -158,82 +150,72 @@ int main(int argc, char *argv[])
         {
             fprintf(output_file, " ");
         }
-        else if (dialogue_section[i] == 0x0d)
+        else if (dialogue_section[i] == 0x0d && dialogue_section[i - 1] != 0x0f)
         {
             fprintf(output_file, "[EFFECT]");
         }
-        else if (dialogue_section[i] == 0x01)
+        else if (dialogue_section[i] == 0x01 && !(dialogue_section[i - 1] == 0x04 || dialogue_section[i - 1] == 0x05 || dialogue_section[i - 1] == 0x0c || dialogue_section[i - 1] == 0x0f))
         {
             fprintf(output_file, "\n");
         }
-        else if (dialogue_section[i] == 0x0b)
+        else if (dialogue_section[i] == 0x0b && dialogue_section[i - 1] != 0x0f)
         {
             fprintf(output_file, "--");
         }
-        else if (dialogue_section[i] == 0x00 || dialogue_section[i - 1] == 0x16 || dialogue_section[i] == 0x20)
+        else if ((dialogue_section[i] == 0x00 && !(dialogue_section[i - 1] == 0x04 || dialogue_section[i - 1] == 0x0f)) || (dialogue_section[i - 1] == 0x16 && !dialogue_section[i - 1] == 0x0f) || dialogue_section[i] == 0x20)
         {
             fprintf(output_file, "\n\n--------------------\n");
         }
-        else if (dialogue_section[i] == 0x02)
+        else if (dialogue_section[i] == 0x02 && !(dialogue_section[i - 1] == 0x04 || dialogue_section[i - 1] == 0x05 || dialogue_section[i - 1] == 0x0c || dialogue_section[i - 1] == 0x0f))
         {
             fprintf(output_file, "\n⬇\n");
         }
         else if (dialogue_section[i] == 0x0f && dialogue_section[i - 1] == 0x0e)
         {
-            fprintf(output_file, "[/EFFECT %s]", is_effect(dialogue_section[i + 1]));
-            i += 2;    
+            fprintf(output_file, "[/EFFECT %s", is_effect(dialogue_section[i + 1]));
         }
-        else if (dialogue_section[i] == 0x04)
+        else if (dialogue_section[i] == 0x04 && !(dialogue_section[i - 1] == 0x04 || dialogue_section[i - 1] == 0x05 || dialogue_section[i - 1] == 0x0c || dialogue_section[i - 1] == 0x0f))
         {
             switch (dialogue_section[i + 1])
             {
                 case 0x00:
                     fprintf(output_file, "Ryu");
-                    i++;                    
                     break;
                 case 0x01:
                     fprintf(output_file, "Nina");
-                    i++;                    
                     break;
                 case 0x02:
                     fprintf(output_file, "Garr");
-                    i++;                    
                     break;
                 case 0x03:
                     fprintf(output_file, "Teepo");
-                    i++;                    
                     break;
                 case 0x04:
                     fprintf(output_file, "Rei");
-                    i++;                    
                     break;
                 case 0x05:
                     fprintf(output_file, "Momo");
-                    i++;                    
                     break;
                 case 0x06:
                     fprintf(output_file, "Peco");
-                    i++;                    
                     break;
                 default:
                     fprintf(output_file, "");
                     break;
             }
         }
-        else if (dialogue_section[i] == 0x05)
+        else if (dialogue_section[i] == 0x05 && !(dialogue_section[i - 1] == 0x04 || dialogue_section[i - 1] == 0x05 || dialogue_section[i - 1] == 0x0c || dialogue_section[i - 1] == 0x0f || dialogue_section[i - 1] == 0x14))
         {
             strcpy(last_color, is_color(dialogue_section[i + 1]));
             fprintf(output_file, "[%s]", last_color);
-            i++;            
         }
-        else if (dialogue_section[i] == 0x06)
+        else if (dialogue_section[i] == 0x06 && !(dialogue_section[i - 1] == 0x04 || dialogue_section[i - 1] == 0x05 || dialogue_section[i - 1] == 0x0c || dialogue_section[i - 1] == 0x0f || dialogue_section[i - 1] == 0x14))
         {
             fprintf(output_file, "[/%s]", last_color);
         }
-        else if (dialogue_section[i] == 0x14)
+        else if (dialogue_section[i] == 0x14 && (dialogue_section[i - 1] != 0x0f && dialogue_section[i + 2] == 0x0C))
         {
-            fprintf(output_file, "\n[OPTIONS]\n");
-            i += 2;
+            fprintf(output_file, "\n[OPTIONS]\n");            
         }
         else if ((punct = is_punct(dialogue_section[i])) != 0x00)
         {

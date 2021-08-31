@@ -4,10 +4,10 @@
 #include <stdint.h>
 #include <string.h>
 
-#define HRSTART 0x5B
-#define HREND 0xA9
-#define KTSTART 0xAB
-#define KTEND 0xFA
+#define HRSTART 0x5b
+#define HREND 0xa9
+#define KTSTART 0xab
+#define KTEND 0xfa
 #define KJSTART 0x1200
 
 typedef uint8_t byte;

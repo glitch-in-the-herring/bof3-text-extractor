@@ -48,6 +48,7 @@ int main(int argc, char *argv[])
     if (katakana_source == NULL)
     {
         printf("Katakana table not found!\n");
+        fclose(hiragana_source);        
         fclose(area_file);
         return 7;
     }
@@ -56,6 +57,8 @@ int main(int argc, char *argv[])
     if (kanji_source == NULL)
     {
         printf("Kanji table not found!\n");
+        fclose(hiragana_source);
+        fclose(katakana_source);
         fclose(area_file);
         return 8;
     }    
@@ -64,6 +67,9 @@ int main(int argc, char *argv[])
     if (output_file == NULL)
     {
         printf("Error opening output file\n");
+        fclose(hiragana_source);
+        fclose(katakana_source);
+        fclose(kanji_source);
         fclose(area_file);
         return 5;
     }

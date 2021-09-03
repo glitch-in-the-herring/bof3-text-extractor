@@ -21,19 +21,18 @@ int main(int argc, char *argv[])
     {
         printf("Not an .EMI file!\n");
         fclose(area_file);
-        return 5;
+        return 3;
     }
 
     word file_count = convert_little_endian(toc_header, 3, 0);
     word address;
     word section_size;
-    bool dialogue_section_found = false;
 
     if ((address = find_dialogue_section(area_file, file_count, &section_size)) == 0)
     {
         printf("Dialogue section not found!\n");
         fclose(area_file);
-        return 6;
+        return 4;
     }
     fseek(area_file, address, SEEK_SET);
 
@@ -42,7 +41,7 @@ int main(int argc, char *argv[])
     {
         printf("Error opening output file\n");
         fclose(area_file);
-        return 3;
+        return 5;
     }    
 
     byte dialogue_section[section_size];

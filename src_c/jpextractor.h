@@ -11,20 +11,16 @@
 #define KJSTART 0x1200
 
 typedef uint8_t byte;
-typedef struct node
-{
-    byte chunk[512];
-    struct node *next;
-} node;
+typedef uint32_t word;
 
-void free_node(node *n);
+word convert_little_endian(byte a[], int n, int k);
+word find_dialogue_section(FILE *f, word count, word *section_size);
 void load_lookup_table(int n, char table[][n], FILE *source);
-void copy_arrays(byte target[], byte source[], int n);
 bool is_math_tbl(byte chunk[]);
-bool is_first_prepadding(byte chunk[]);
-bool is_second_prepadding(byte chunk[]);
-bool is_final_chunk(byte chunk[]);
+bool is_dialogue_section(byte toc_entry[]);
 bool is_hiragana(byte a);
 bool is_katakana(byte a);
 bool is_kanji_start(byte a);
 char *is_punct(byte a);
+char *is_color(byte a);
+char *is_effect(byte a);

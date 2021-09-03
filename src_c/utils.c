@@ -1,24 +1,5 @@
 #include "extractor.h"
 
-void free_node(node *n)
-{
-    node *temp;
-    while (n != NULL)
-    {
-        temp = n->next;
-        free(n);
-        n = temp;
-    }
-}
-
-void copy_arrays(byte target[], byte source[], int n)
-{
-    for (int i = 0; i < n; i++)
-    {
-        target[i] = source[i];
-    }
-}
-
 word convert_little_endian(byte a[], int n, int k)
 {
     word result = 0;

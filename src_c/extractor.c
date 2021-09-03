@@ -20,14 +20,14 @@ int main(int argc, char *argv[])
     {
         printf("Error reading file!\n");
         fclose(area_file);
-        return 2;
+        return 3;
     }
     
     if (!is_math_tbl(toc_header))
     {
         printf("Not an .EMI file!\n");
         fclose(area_file);
-        return 3;
+        return 4;
     }
 
     word file_count = convert_little_endian(toc_header, 3, 0);
@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
     {
         printf("Dialogue section not found!\n");
         fclose(area_file);
-        return 4;
+        return 5;
     }
     fseek(area_file, address, SEEK_SET);
 
@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
     {
         printf("Error opening output file\n");
         fclose(area_file);
-        return 5;
+        return 6;
     }    
 
     byte dialogue_section[section_size];
@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
         printf("Error reading file!\n");
         fclose(area_file);
         fclose(output_file);
-        return 2;
+        return 7;
     }
     char punct;
     char last_color[8];

@@ -198,7 +198,7 @@ char *is_effect(byte a)
     {
         case 0x00:
             return "type=shake duration=short";
-            break;        
+            break;
         case 0x01:
             return "type=shake duration=long";
             break;
@@ -240,7 +240,7 @@ char *is_effect(byte a)
             break;
         case 0x0e:
             return "size=small3 duration=short";
-            break; 
+            break;
         case 0x0f:
             return "size=small1 duration=long";
             break;

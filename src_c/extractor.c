@@ -60,6 +60,7 @@ int main(int argc, char *argv[])
     }
     char punct;
     char last_color[8];
+    char symbol[4];
     for (int i = 0; i < section_size; i++)
     {
         if (is_alpha(dialogue_section[i]))
@@ -187,10 +188,14 @@ int main(int argc, char *argv[])
             fprintf(output_file, "\n[OPTIONS]\n");
             i += 2;
         }
+        else if (strcmp(strcpy(symbol, is_symbol(dialogue_section[i])), "") != 0)
+        {
+            fprintf(output_file, "%s", symbol);
+        }
         else if ((punct = is_punct(dialogue_section[i])) != 0x00)
         {
             fprintf(output_file, "%c", punct);
-        }  
+        }
     }
 
     fclose(area_file);

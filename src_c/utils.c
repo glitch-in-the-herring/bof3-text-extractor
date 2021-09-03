@@ -94,8 +94,69 @@ char is_punct(byte a)
         case 0x8f:
             return ':';
             break;
+        case 0x91:
+            return ';';
+            break;
         default:
             return 0x00;
+            break;
+    }
+}
+
+char *is_symbol(byte a)
+{
+    switch (a)
+    {
+        case 0x7b:
+            return "↑";
+            break;
+        case 0x7c:
+            return "↓";
+            break; 
+        case 0x7d:
+            return "←";
+            break;
+        case 0x7e:
+            return "→";
+            break;
+        case 0x7f:
+            return "〜";
+            break;
+        case 0x80:
+            return "◯";
+            break;
+        case 0x81:
+            return "△";
+            break;
+        case 0x82:
+            return "×";
+            break;
+        case 0x83:
+            return "□";
+            break;
+        case 0x86:
+            return "↖";
+            break;
+        case 0x87:
+            return "↘";
+            break; 
+        case 0x88:
+            return "↗";
+            break;
+        case 0x89:
+            return "↙";
+            break;
+        case 0x93:
+            return "%";
+            break;
+        case 0x8a:
+            return "©";
+            break;
+        case 0x8d:
+            return "&";
+            break;
+        default:
+            return "";
             break;
     }
 }
@@ -127,7 +188,7 @@ char *is_color(byte a)
             break;
         default:
             return "";
-            break;            
+            break;
     }    
 }
 

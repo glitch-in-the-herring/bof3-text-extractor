@@ -16,7 +16,13 @@ int main(int argc, char *argv[])
     }
 
     byte toc_header[16];
-    fread(toc_header, 1, sizeof(toc_header), area_file);
+    if (fread(toc_header, 1, sizeof(toc_header), area_file) != sizeof(toc_header))
+    {
+        printf("Error reading file!\n");
+        fclose(area_file);
+        return 2;
+    }
+    
     if (!is_math_tbl(toc_header))
     {
         printf("Not an .EMI file!\n");
@@ -45,8 +51,13 @@ int main(int argc, char *argv[])
     }    
 
     byte dialogue_section[section_size];
-    fread(dialogue_section, 1, sizeof(dialogue_section), area_file);
-
+    if (fread(dialogue_section, 1, sizeof(dialogue_section), area_file) != sizeof(dialogue_section))
+    {
+        printf("Error reading file!\n");
+        fclose(area_file);
+        fclose(output_file);
+        return 2;
+    }
     char punct;
     char last_color[8];
     for (int i = 0; i < section_size; i++)

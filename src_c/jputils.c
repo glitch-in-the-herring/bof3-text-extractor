@@ -18,7 +18,10 @@ word find_dialogue_section(FILE *f, word count, word *section_size)
     do
     {
         address += tmp;
-        fread(toc_entry, 1, sizeof(toc_entry), f);
+        if (fread(toc_entry, 1, sizeof(toc_entry), f) != sizeof(toc_entry))
+        {
+            return -1;
+        }
 
         if (is_dialogue_section(toc_entry))
         {

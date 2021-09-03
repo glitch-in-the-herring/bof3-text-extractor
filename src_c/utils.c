@@ -19,12 +19,48 @@ void copy_arrays(byte target[], byte source[], int n)
     }
 }
 
-bool is_math_tbl(byte chunk[])
+word convert_little_endian(byte a[], int n, int k)
+{
+    word result = 0;
+    for (int i = n; i >= k; i--)
+    {
+        result = a[i] << 8 * i | result;
+    }
+    return result;
+}
+
+word find_dialogue_section(FILE *f, word count, word *section_size)
+{
+    byte toc_entry[16];
+    word tmp = 0;
+    word address = 0x0800;
+    do
+    {
+        address += tmp;
+        fread(toc_entry, 1, sizeof(toc_entry), f);
+
+        if (is_dialogue_section(toc_entry))
+        {
+            *section_size = convert_little_endian(toc_entry, 3, 0);
+            return address;
+        }
+
+        tmp = convert_little_endian(toc_entry, 3, 0);
+        if (tmp % 0x0800 != 0)
+        {
+            tmp = 0x0800 * ((tmp + 0x0800) / 0x0800);
+        }
+    } 
+    while (count--);
+    return 0;
+}
+
+bool is_math_tbl(byte toc_header[])
 {
     byte magic[8] = {0x4d, 0x41, 0x54, 0x48, 0x5f, 0x54, 0x42, 0x4c};
     for (int i = 8; i < 16; i++)
     {
-        if (chunk[i] != magic[i - 8])
+        if (toc_header[i] != magic[i - 8])
         {
             return false;
         }
@@ -32,46 +68,9 @@ bool is_math_tbl(byte chunk[])
     return true;
 }
 
-bool is_first_prepadding(byte chunk[])
+bool is_dialogue_section(byte toc_entry[])
 {
-    int a = 0;
-    int b = 0;
-    for (int i = 0; i < 512; i++)
-    {
-        if (chunk[i] == 0x00)
-        {
-            a++;
-        }
-        else if (chunk[i] == 0x5f)
-        {
-            b++;
-        }
-    }
-    return a == 136 && b == 376;
-}
-
-bool is_second_prepadding(byte chunk[])
-{
-    int a = 0;
-    for (int i = 0; i < 512; i++)
-    {
-        if (chunk[i] == 0x5f)
-        {
-            a++;
-        }
-    }
-    return a == 512;
-}
-
-// The dialogue section always lines up with the
-// chunks, that is to say, a dialogue section fits
-// within an integer number of chunks.
-// To accomplish this it must add paddings, which
-// consists of repeating 0x5F. This can be used to
-// check the end of the section.
-bool is_final_chunk(byte chunk[])
-{
-    return chunk[511] == 0x5f && chunk[510] == 0x5f;
+    return toc_entry[8] == 0x00 && toc_entry[9] == 0x02 && toc_entry[11] == 0x02;
 }
 
 // The builtin function in ctype.h should in theory

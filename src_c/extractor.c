@@ -15,15 +15,27 @@ int main(int argc, char *argv[])
         return 2;
     }
 
-    byte toc_entries[16];
-    fread(chunk, 1, sizeof(chunk), area_file);
-    if (!is_math_tbl(chunk))
+    byte toc_header[16];
+    fread(toc_header, 1, sizeof(toc_header), area_file);
+    if (!is_math_tbl(toc_header))
     {
-        printf("Not a valid .EMI file!\n");
-        fclose(area_file);;
-        free_node(chunk_chain);
+        printf("Not an .EMI file!\n");
+        fclose(area_file);
         return 5;
     }
+
+    word file_count = convert_little_endian(toc_header, 3, 0);
+    word address;
+    word section_size;
+    bool dialogue_section_found = false;
+
+    if ((address = find_dialogue_section(area_file, file_count, &section_size)) == 0)
+    {
+        printf("Dialogue section not found!\n");
+        fclose(area_file);
+        return 6;
+    }
+    fseek(area_file, address, SEEK_SET);
 
     FILE *output_file = fopen(argv[2], "w");
     if (output_file == NULL)
@@ -33,9 +45,12 @@ int main(int argc, char *argv[])
         return 3;
     }    
 
+    byte dialogue_section[section_size];
+    fread(dialogue_section, 1, sizeof(dialogue_section), area_file);
+
     char punct;
     char last_color[8];
-    for (int i = 0; i < 512 * chunk_count - 1; i++)
+    for (int i = 0; i < section_size; i++)
     {
         if (is_alpha(dialogue_section[i]))
         {
@@ -93,9 +108,14 @@ int main(int argc, char *argv[])
         {
             fprintf(output_file, "--");
         }
-        else if (dialogue_section[i] == 0x00 || dialogue_section[i - 1] == 0x16 || dialogue_section[i] == 0x20)
+        else if (dialogue_section[i] == 0x00 || dialogue_section[i] == 0x20)
         {
             fprintf(output_file, "\n\n--------------------\n");
+        }
+        else if (dialogue_section[i] == 0x16)
+        {
+            fprintf(output_file, "\n\n--------------------\n");
+            i++;
         }
         else if (dialogue_section[i] == 0x02)
         {

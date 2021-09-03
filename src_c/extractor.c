@@ -9,108 +9,47 @@ int main(int argc, char *argv[])
     }
 
     FILE *area_file = fopen(argv[1], "rb");
-    FILE *output_file = fopen(argv[2], "w");
     if (area_file == NULL)
     {
         printf("Error opening input file\n");
-        fclose(output_file);
-        remove(argv[2]);
         return 2;
     }
-    else if (output_file == NULL)
+
+    byte toc_header[16];
+    fread(toc_header, 1, sizeof(toc_header), area_file);
+    if (!is_math_tbl(toc_header))
     {
-        printf("Error opening output file\n");
+        printf("Not an .EMI file!\n");
         fclose(area_file);
         return 3;
     }
 
-    byte chunk[512];
-    node *chunk_chain = NULL;
-    node *temp = calloc(1, sizeof(node));
-    if (temp == NULL)
+    word file_count = convert_little_endian(toc_header, 3, 0);
+    word address;
+    word section_size;
+
+    if ((address = find_dialogue_section(area_file, file_count, &section_size)) == 0)
     {
-        printf("Failed to allocate memory\n");
+        printf("Dialogue section not found!\n");
         fclose(area_file);
-        fclose(output_file);
-        remove(argv[2]);
         return 4;
     }
-    chunk_chain = temp;
+    fseek(area_file, address, SEEK_SET);
 
-    int chunk_count = 0;
-    bool final_chunk = false;
-    bool first_chunk = true;
-    bool paddings_found[2] = {false, false};
-
-    fread(chunk, 1, sizeof(chunk), area_file);
-    if (!is_math_tbl(chunk))
+    FILE *output_file = fopen(argv[2], "w");
+    if (output_file == NULL)
     {
-        printf("Not a valid .EMI file!\n");
+        printf("Error opening output file\n");
         fclose(area_file);
-        fclose(output_file);
-        free_node(chunk_chain);
-        remove(argv[2]);
         return 5;
-    }
+    }    
 
-    while (fread(chunk, 1, sizeof(chunk), area_file) > 0 && !final_chunk)
-    {
-        if (!(paddings_found[0] && paddings_found[1]))
-        {
-            if (!paddings_found[1] && is_first_prepadding(chunk))
-            {
-                paddings_found[0] = true;
-            }         
-            else if (paddings_found[0] && is_second_prepadding(chunk))
-            {
-                paddings_found[1] = true;
-            }
-        }
-        else
-        {
-            chunk_count++;
-            temp->next = calloc(1, sizeof(node));
-            if (temp->next == NULL)
-            {
-                printf("Failed to allocate memory\n");
-                fclose(area_file);
-                fclose(output_file);
-                free_node(chunk_chain);
-                remove(argv[2]);
-                return 4;
-            }
-            copy_arrays(temp->chunk, chunk, 512);
-            temp = temp->next;
-            // Check if this is the final chunk.
-            final_chunk = is_final_chunk(chunk);
-        }
-    }
-
-    if (!(paddings_found[0] && paddings_found[1]))
-    {
-        printf("No dialogue section found in this .EMI file!\n");
-        fclose(area_file);
-        fclose(output_file);
-        free_node(chunk_chain);
-        remove(argv[2]);
-        return 6;
-    }
-
-    byte dialogue_section[512 * chunk_count];
-    int i = 0;
-    for (node *n = chunk_chain; n->next != NULL; n = n->next)
-    {
-        for (int j = 0; j < 512; j++)
-        {
-            dialogue_section[512 * i + j] = n->chunk[j];
-        }
-        i++;
-    }
-    free_node(chunk_chain);
+    byte dialogue_section[section_size];
+    fread(dialogue_section, 1, sizeof(dialogue_section), area_file);
 
     char punct;
     char last_color[8];
-    for (int i = 0; i < 512 * chunk_count - 1; i++)
+    for (int i = 0; i < section_size; i++)
     {
         if (is_alpha(dialogue_section[i]))
         {
@@ -168,9 +107,14 @@ int main(int argc, char *argv[])
         {
             fprintf(output_file, "--");
         }
-        else if (dialogue_section[i] == 0x00 || dialogue_section[i - 1] == 0x16 || dialogue_section[i] == 0x20)
+        else if (dialogue_section[i] == 0x00 || dialogue_section[i] == 0x20)
         {
             fprintf(output_file, "\n\n--------------------\n");
+        }
+        else if (dialogue_section[i] == 0x16)
+        {
+            fprintf(output_file, "\n\n--------------------\n");
+            i++;
         }
         else if (dialogue_section[i] == 0x02)
         {

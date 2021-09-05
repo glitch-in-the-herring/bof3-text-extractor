@@ -5,9 +5,9 @@
 #include <string.h>
 
 #define HRSTART 0x5b
-#define HREND 0xa9
+#define HREND 0xaa
 #define KTSTART 0xab
-#define KTEND 0xfa
+#define KTEND 0xfb
 #define KJSTART 0x1200
 
 typedef uint8_t byte;

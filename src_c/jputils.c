@@ -75,7 +75,7 @@ bool is_math_tbl(byte toc_header[])
 
 bool is_dialogue_section(byte toc_entry[])
 {
-    return toc_entry[8] == 0x00 && toc_entry[9] == 0x02 && toc_entry[11] == 0x02;
+    return toc_entry[8] == 0x00 && toc_entry[9] == 0x02 && toc_entry[10] != 0x16 && toc_entry[11] == 0x02;
 }
 
 bool is_hiragana(byte a)

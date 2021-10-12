@@ -21,7 +21,7 @@ bool is_dialogue_section(byte toc_entry[]);
 bool is_hiragana(byte a);
 bool is_katakana(byte a);
 bool is_kanji_start(byte a);
-bool is_num(byte a);
+bool is_alphanum(byte a);
 char *is_punct(byte a);
 char *is_color(byte a);
 char *is_effect(byte a);

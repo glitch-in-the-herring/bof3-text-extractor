@@ -250,7 +250,7 @@ int main(int argc, char *argv[])
             fprintf(output_file, "〜");
             i++;
         }
-        else if (is_num(dialogue_section[i]))
+        else if (is_alphanum(dialogue_section[i]))
         {
             fprintf(output_file, "%c", dialogue_section[i]);
         }

@@ -93,9 +93,9 @@ bool is_kanji_start(byte a)
     return a == 0x12 || a == 0x13;
 }
 
-bool is_num(byte a)
+bool is_alphanum(byte a)
 {
-    return a >= 48 && a <= 57;
+    return (a >= 97 && a <= 122) || (a >= 48 && a <= 57);
 }
 
 char *is_punct(byte a)

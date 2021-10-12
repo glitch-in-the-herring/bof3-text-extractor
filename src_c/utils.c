@@ -59,9 +59,9 @@ bool is_dialogue_section(byte toc_entry[])
 
 // The builtin function in ctype.h should in theory
 // work just fine.
-bool is_alpha(byte a)
+bool is_alphanum(byte a)
 {
-    return (a >= 65 && a <= 90) || (a >= 97 && a <= 122);
+    return (a >= 65 && a <= 90) || (a >= 97 && a <= 122) || (a >= 48 && a <= 57);
 }
 
 // Converts codepoints used for encoding punctuations

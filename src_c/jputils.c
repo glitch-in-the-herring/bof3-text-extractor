@@ -93,6 +93,11 @@ bool is_kanji_start(byte a)
     return a == 0x12 || a == 0x13;
 }
 
+bool is_num(byte a)
+{
+    return a >= 48 && a <= 57;
+}
+
 char *is_punct(byte a)
 {
     switch (a)

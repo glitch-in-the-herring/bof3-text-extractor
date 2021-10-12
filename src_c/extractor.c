@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
     char symbol[4];
     for (int i = 0; i < section_size; i++)
     {
-        if (is_alpha(dialogue_section[i]))
+        if (is_alphanum(dialogue_section[i]))
         {
             fprintf(output_file, "%c", dialogue_section[i]);
         }        

@@ -250,6 +250,10 @@ int main(int argc, char *argv[])
             fprintf(output_file, "〜");
             i++;
         }
+        else if (is_num(dialogue_section[i]))
+        {
+            fprintf(output_file, "%c", dialogue_section[i]);
+        }
         else if (strcmp(strcpy(punct, is_punct(dialogue_section[i])), "") != 0)
         {
             fprintf(output_file, "%s", punct);

@@ -129,6 +129,70 @@ char *is_punct(byte a)
     }
 }
 
+char *is_symbol(byte a)
+{
+    switch (a)
+    {
+        case 0x00:
+            return "↑";
+            break;
+        case 0x01:
+            return "↓";
+            break;
+        case 0x02:
+            return "←";
+            break;
+        case 0x03:
+            return "→";
+            break;
+        case 0x04:
+            return "❤";
+            break;
+        case 0x05:
+            return "♪";
+            break;
+        case 0x06:
+            return "Ƶ";
+            break;
+        case 0x07:
+            return "〜";
+            break;
+        case 0x08:
+            return "◯";
+            break;
+        case 0x09:
+            return "×";
+            break;
+        case 0x0a:
+            return "△";
+            break;
+        case 0x0b:
+            return "□";
+            break;
+        case 0x0c:
+            return "✩";
+            break;
+        case 0x11:
+            return "↖";
+            break;
+        case 0x12:
+            return "↘";
+            break;
+        case 0x13:
+            return "↗";
+            break;
+        case 0x14:
+            return "↙";
+            break;
+        case 0x12:
+            return "©";
+            break;
+        default:
+            return "";
+            break;
+    }
+}
+
 char *is_color(byte a)
 {
     switch (a)

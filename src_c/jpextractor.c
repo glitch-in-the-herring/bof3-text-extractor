@@ -245,9 +245,10 @@ int main(int argc, char *argv[])
             fprintf(output_file, "\n[OPTIONS]\n");
             i += 2;
         }
-        else if (dialogue_section[i] == 0x15 && dialogue_section[i + 1] == 0x07)
+        else if (dialogue_section[i] == 0x15)
         {
-            fprintf(output_file, "〜");
+            strcpy(punct, is_symbol(dialogue_section[i + 1]))           
+            fprintf(output_file, "%s", punct);
             i++;
         }
         else if (is_alphanum(dialogue_section[i]))

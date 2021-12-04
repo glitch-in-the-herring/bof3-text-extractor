@@ -23,5 +23,6 @@ bool is_katakana(byte a);
 bool is_kanji_start(byte a);
 bool is_alphanum(byte a);
 char *is_punct(byte a);
+char *is_symbol(byte a);
 char *is_color(byte a);
 char *is_effect(byte a);

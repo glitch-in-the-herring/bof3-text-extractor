@@ -57,15 +57,11 @@ bool is_dialogue_section(byte toc_entry[])
     return toc_entry[8] == 0x00 && toc_entry[9] == 0x02 && toc_entry[10] != 0x16 && toc_entry[11] == 0x02;
 }
 
-// The builtin function in ctype.h should in theory
-// work just fine.
 bool is_alphanum(byte a)
 {
     return (a >= 65 && a <= 90) || (a >= 97 && a <= 122) || (a >= 48 && a <= 57);
 }
 
-// Converts codepoints used for encoding punctuations
-// into actual punctuations.
 char is_punct(byte a)
 {
     switch (a)

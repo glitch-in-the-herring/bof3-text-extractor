@@ -184,9 +184,6 @@ char *is_symbol(byte a)
         case 0x14:
             return "↙";
             break;
-        case 0x12:
-            return "©";
-            break;
         default:
             return "";
             break;

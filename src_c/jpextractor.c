@@ -247,7 +247,7 @@ int main(int argc, char *argv[])
         }
         else if (dialogue_section[i] == 0x15)
         {
-            strcpy(punct, is_symbol(dialogue_section[i + 1]))           
+            strcpy(punct, is_symbol(dialogue_section[i + 1]));        
             fprintf(output_file, "%s", punct);
             i++;
         }

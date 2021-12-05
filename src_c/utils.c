@@ -1,11 +1,11 @@
 #include "extractor.h"
 
-word convert_little_endian(byte a[], int n, int k)
+word convert_little_endian(byte a[], int n, int bytes)
 {
     word result = 0;
-    for (int i = n; i >= k; i--)
+    for (int i = bytes - 1; i >= 0; i--)
     {
-        result = a[i] << 8 * i | result;
+        result = a[n + i] << 8 * i | result;
     }
     return result;
 }
@@ -25,11 +25,11 @@ word find_dialogue_section(FILE *f, word count, word *section_size)
 
         if (is_dialogue_section(toc_entry))
         {
-            *section_size = convert_little_endian(toc_entry, 3, 0);
+            *section_size = convert_little_endian(toc_entry, 0, 4);
             return address;
         }
 
-        tmp = convert_little_endian(toc_entry, 3, 0);
+        tmp = convert_little_endian(toc_entry, 0, 4);
         if (tmp % 0x0800 != 0)
         {
             tmp = 0x0800 * ((tmp + 0x0800) / 0x0800);
@@ -97,6 +97,53 @@ char is_punct(byte a)
             return 0x00;
             break;
     }
+}
+
+char *is_position(byte a)
+{
+    static char buffer[20];
+    byte position = a & 0x0f;
+    byte style = (a & 0xf0) >> 4;
+
+    switch (position)
+    {
+        case 0x00:
+            strcpy(buffer, "[BOTTOMM");
+            break;
+        case 0x01:
+            strcpy(buffer, "[MIDM");
+            break;
+        case 0x02:
+            strcpy(buffer, "[TOPM");
+            break;
+        case 0x03:
+            strcpy(buffer, "[TOPL");
+            break;
+        case 0x04:
+            strcpy(buffer, "[TOPR");
+            break;
+        case 0x05:
+            strcpy(buffer, "[BOTTOML");
+            break;
+        case 0x06:
+            strcpy(buffer, "[BOTTOMR");
+            break;
+    }
+
+    switch (style)
+    {
+        case 0x00:
+            strcat(buffer, "] ");
+            break;
+        case 0x04:
+            strcat(buffer, " SMALL] ");
+            break;
+        case 0x08:
+            strcat(buffer, " NOBOX] ");
+            break;
+    }
+
+    return buffer;
 }
 
 char *is_symbol(byte a)

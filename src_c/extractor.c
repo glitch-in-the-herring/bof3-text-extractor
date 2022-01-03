@@ -67,6 +67,8 @@ int main(int argc, char *argv[])
     char symbol[4];
     char box_position[20];
     int j;
+    int opt_counter = 0;
+    int in_opt = 0;
 
     for (int i = 0; i < pointer_size; i++)
     {
@@ -81,7 +83,7 @@ int main(int argc, char *argv[])
             break;
         }
 
-        while (dialogue_section[j] != 0x00 && dialogue_section[j] != 0x16)
+        while ((dialogue_section[j] != 0x00 || opt_counter > 0) && dialogue_section[j] != 0x16)
         {
             if (is_alphanum(dialogue_section[j]))
             {
@@ -167,7 +169,9 @@ int main(int argc, char *argv[])
             else if (dialogue_section[j] == 0x14)
             {
                 fprintf(output_file, "\n[OPTIONS]\n");
-                j += 2;
+                opt_counter = dialogue_section[j + 3] & 0xf;
+                in_opt = 1;
+                j += 3;
             }
             else if (strcmp(strcpy(symbol, is_symbol(dialogue_section[j])), "") != 0)
             {
@@ -179,8 +183,20 @@ int main(int argc, char *argv[])
             }
             else if (dialogue_section[j] == 0x07)
             {
-                fprintf(output_file, " [PLACEHOLDER] ");
+                fprintf(output_file, "[PLACEHOLDER]");
                 j++;
+            }
+            else if (dialogue_section[j] == 0x00 && opt_counter > 0)
+            {
+                fprintf(output_file, "\n");
+                opt_counter--;
+            }
+
+            if (in_opt == 1 && opt_counter == 0)
+            {
+                fprintf(output_file, "[/OPTION]");
+                in_opt = 0;
+                break;
             }
 
             j++;
